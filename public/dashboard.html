@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #logoutBtn {
+      float: right;
+      padding: 6px 12px;
+      background-color: #e74c3c;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #logoutBtn:hover {
+      background-color: #c0392b;
+    }
+    .nav a {
+      margin-right: 20px;
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <button id="logoutBtn">Logout</button>
+
+  <h1 id="welcomeText">Welcome to the Banking Dashboard</h1>
+
+  <nav class="nav">
+    <a href="/accounts.html">Accounts</a>
+    <a href="/branches.html">Branches</a>
+    <a href="/credit-cards.html">Credit Cards</a>
+    <a href="/loans.html">Loans</a>
+    <a href="/payments.html">Payments</a>
+    <a href="/investments.html">Investments</a>
+    <a href="/admin.html" id="adminLink" style="display:none;">Admin Panel</a>
+  </nav>
+
+  <script>
+    async function fetchUser() {
+      try {
+        const res = await fetch('/me');
+        if (res.ok) {
+          const user = await res.json();
+          document.getElementById('welcomeText').textContent =
+            'Welcome, ' + (user.name || user.email || 'User');
+
+          if (user.role === 'admin') {
+            document.getElementById('adminLink').style.display = 'inline-block';
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load user info');
+      }
+    }
+
+    fetchUser();
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = '/logout';
+    });
+  </script>
+</body>
+</html>

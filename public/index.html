@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Test App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .login-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 320px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .message {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .message.success {
+      color: green;
+    }
+    .message.error {
+      color: red;
+    }
+    .register-link {
+      display: block;
+      margin-top: 15px;
+      text-align: center;
+      color: #007bff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .register-link:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .divider {
+      text-align: center;
+      margin: 15px 0;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required />
+      <button type="submit">Login</button>
+      <p id="message" class="message"></p>
+    </form>
+
+    <a href="/register.html" class="register-link">Register a new account</a>
+
+    <div class="divider">OR</div>
+
+    <button onclick="window.location.href='/auth/forgerock'">Login with ForgeRock</button>
+  </div>
+
+  <script>
+    const messageElement = document.getElementById('message');
+
+    // Show logout success message if redirected after logout
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('logged_out') === 'true') {
+      messageElement.textContent = 'You have successfully signed out.';
+      messageElement.className = 'message success';
+    }
+
+    // Handle local login
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        console.log("Login response:", data);
+
+        if (data.success) {
+          localStorage.setItem('role', data.role);
+          messageElement.className = 'message success';
+          messageElement.textContent = 'Login successful! Redirecting...';
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 800);
+        } else {
+          messageElement.className = 'message error';
+          messageElement.textContent = data.message;
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        messageElement.className = 'message error';
+        messageElement.textContent = 'Something went wrong!';
+      }
+    });
+  </script>
+</body>
+</html>
