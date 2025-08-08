@@ -5,7 +5,7 @@ const path = require('path');
 const assetRoutes = require('./assets-api'); // Import modular asset routes
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 7444;
 
 // Static user store
 const users = {
@@ -123,7 +123,7 @@ app.get('/logout', (req, res) => {
 });
 
 // ✅ Mount modular asset APIs (accounts, branches, payments, etc.)
-app.use('/api/assets', assetRoutes);
+app.use('/assets', assetRoutes);
 
 // Start server
 app.listen(port, () => {

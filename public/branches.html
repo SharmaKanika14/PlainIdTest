@@ -1,2 +1,41 @@
 <h1>Branches</h1>
-<p>View or search branches here.</p>
+<p>View branch information here.</p>
+
+<table id="branchesTable" border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Location</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Data will be inserted here -->
+  </tbody>
+</table>
+
+<button onclick="window.location.href='/dashboard'">Back to Dashboard</button>
+
+
+<script>
+  fetch('/assets/branches')
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.querySelector('#branchesTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(branch => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${branch.id}</td>
+          <td>${branch.name}</td>
+          <td>${branch.location}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(err => {
+      const tbody = document.querySelector('#branchesTable tbody');
+      tbody.innerHTML = `<tr><td colspan="3">Failed to load data</td></tr>`;
+      console.error('Fetch error:', err);
+    });
+</script>

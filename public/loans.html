@@ -1,2 +1,38 @@
-<h1>Accounts</h1>
-<p>View loan account information here.</p>
+<h1>Loans</h1>
+<p>View loan information here.</p>
+
+<table id="loansTable" border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Amount</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<button onclick="window.location.href='/dashboard'">Back to Dashboard</button>
+
+<script>
+  fetch('/assets/loans')
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.querySelector('#loansTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(loan => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${loan.id}</td>
+          <td>${loan.amount}</td>
+          <td>${loan.status}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(err => {
+      const tbody = document.querySelector('#loansTable tbody');
+      tbody.innerHTML = `<tr><td colspan="3">Failed to load data</td></tr>`;
+      console.error('Fetch error:', err);
+    });
+</script>

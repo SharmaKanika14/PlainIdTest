@@ -1,2 +1,41 @@
-<h1>Accounts</h1>
+<h1>Credit Cards</h1>
 <p>View credit card information here.</p>
+
+<table id="creditCardsTable" border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Limit</th>
+      <th>Holder</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<button onclick="window.location.href='/dashboard'">Back to Dashboard</button>
+
+
+<script>
+  fetch('/assets/creditCards')
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.querySelector('#creditCardsTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(card => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${card.id}</td>
+          <td>${card.type}</td>
+          <td>${card.limit}</td>
+          <td>${card.holder}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(err => {
+      const tbody = document.querySelector('#creditCardsTable tbody');
+      tbody.innerHTML = `<tr><td colspan="4">Failed to load data</td></tr>`;
+      console.error('Fetch error:', err);
+    });
+</script>

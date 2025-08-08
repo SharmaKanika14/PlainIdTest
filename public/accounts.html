@@ -1,2 +1,62 @@
-<h1>Accounts</h1>
-<p>View account information here.</p>
+<head>
+  <style>
+    .back-btn {
+      background-color: #1976d2;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: background 0.2s;
+    }
+    .back-btn:hover {
+      background-color: #125ea2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Accounts</h1>
+  <p>View account information here.</p>
+
+  <table id="accountsTable" border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data will be inserted here -->
+    </tbody>
+  </table>
+    <button class="back-btn" onclick="window.location.href='/dashboard'">Back to Dashboard</button>
+
+
+  <script>
+    fetch('/assets/accounts')
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.querySelector('#accountsTable tbody');
+        tbody.innerHTML = ''; // Clear previous rows
+        data.forEach(account => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${account.id}</td>
+            <td>${account.name}</td>
+            <td>${account.type}</td>
+            <td>${account.balance}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        const tbody = document.querySelector('#accountsTable tbody');
+        tbody.innerHTML = `<tr><td colspan="4">Failed to load data</td></tr>`;
+        console.error('Fetch error:', err);
+      });
+  </script>
+</body>

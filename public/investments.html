@@ -1,0 +1,39 @@
+<h1>Investments</h1>
+<p>View investment information here.</p>
+
+<table id="investmentsTable" border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<button onclick="window.location.href='/dashboard'">Back to Dashboard</button>
+
+
+<script>
+  fetch('/assets/investments')
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.querySelector('#investmentsTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(investment => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${investment.id}</td>
+          <td>${investment.name}</td>
+          <td>${investment.amount}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(err => {
+      const tbody = document.querySelector('#investmentsTable tbody');
+      tbody.innerHTML = `<tr><td colspan="3">Failed to load data</td></tr>`;
+      console.error('Fetch error:', err);
+    });
+</script>

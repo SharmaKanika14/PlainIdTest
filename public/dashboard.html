@@ -47,7 +47,7 @@
         if (res.ok) {
           const user = await res.json();
           document.getElementById('welcomeText').textContent =
-            'Welcome, ' + (user.name || user.email || 'User');
+            'Welcome, ' + (user.username || user.email || 'User');
 
           if (user.role === 'admin') {
             document.getElementById('adminLink').style.display = 'inline-block';
